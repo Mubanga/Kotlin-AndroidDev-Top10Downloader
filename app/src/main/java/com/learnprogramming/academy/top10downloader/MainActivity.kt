@@ -15,13 +15,15 @@ import java.net.URL
 class MainActivity : AppCompatActivity() {
 
     private val TAG = "MainActivity"
+    private var FEEDURL = "https://rss.itunes.apple.com/api/v1/us/apple-music/top-albums/all/25/explicit.rss"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         
         Log.d(TAG,"OnCreate Called")
         val _DownloadData = DownloadData()
-        _DownloadData.execute("URL Goes Here")
+        _DownloadData.execute(FEEDURL)
         Log.d(TAG,"OnCreate Finished")
         // Wait Till I Get My Money Right
     }
@@ -37,28 +39,31 @@ class MainActivity : AppCompatActivity() {
 
             fun DownloadXML(URLPath: String?) : String
             {
-                val XMLResult = StringBuilder()
-                try {
-                    val url = URL(URLPath) // Create the URL Path Object
-                    val connection = url.openConnection() as HttpURLConnection // Create A Connection Object And Cast It TO An HTTPURLConnection
-                    val response = connection.responseCode // ResponseCode That The Website Server Will Send Back
-                    Log.d(TAG,"DownloadXML: The Response Code Was $response")
+                var XMLResult = StringBuilder()
+//                try {
+//                    val url = URL(URLPath) // Create the URL Path Object
+//                    val connection = url.openConnection() as HttpURLConnection // Create A Connection Object And Cast It TO An HTTPURLConnection
+//                    val response = connection.responseCode // ResponseCode That The Website Server Will Send Back
+                    val  _XMLDataReader = XmlDataReader(URLPath!!,500)
+                     XMLResult = _XMLDataReader.DownloadXMLData()
+                     Log.d(TAG,"$TAG: XML RESULT = $XMLResult")
+//                    Log.d(TAG,"DownloadXML: The Response Code Was $response")
 
-                    // Reading From The Actual XML
-                    // We Need The Following 1.) InputStream 2.) InputStreamReader 3.) BufferedReader
-//                    val inputStream = connection.inputStream
-//                    val inputStreamReader = InputStreamReader(inputStream)
-                    val bufferedReader = BufferedReader(InputStreamReader(connection.inputStream))
-                }
-                catch (e: MalformedURLException)
-                {
-                    Log.e(TAG,"DownloadXML: Invalid URL ${e.message} ")
-                }catch(e: IOException){
-                    Log.e(TAG,"DownloadXML: IOException ${e.message} ")
-
-                } catch(e: Exception){
-                    Log.e(TAG,"DownloadXML: Unknown Exception ${e.message}")
-                }
+//                    // Reading From The Actual XML
+//                    // We Need The Following 1.) InputStream 2.) InputStreamReader 3.) BufferedReader
+////                    val inputStream = connection.inputStream
+////                    val inputStreamReader = InputStreamReader(inputStream)
+//                    val bufferedReader = BufferedReader(InputStreamReader(connection.inputStream))
+//                }
+//                catch (e: MalformedURLException)
+//                {
+//                    Log.e(TAG,"DownloadXML: Invalid URL ${e.message} ")
+//                }catch(e: IOException){
+//                    Log.e(TAG,"DownloadXML: IOException ${e.message} ")
+//
+//                } catch(e: Exception){
+//                    Log.e(TAG,"DownloadXML: Unknown Exception ${e.message}")
+//                }
                 return XMLResult.toString()
             }
 
@@ -66,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                   // TODO("not implemented")To change body of created functions use File | Settings | File Templates.
                 Log.d(TAG,"doInBackground Called With Parameter: ${url[0]}")
                 val RSSFeed = DownloadXML(url[0])
-                if(RSSFeed.isEmpty())
+                if(RSSFeed=="")
                 {
                     Log.e(TAG,"doInBackground: Error Downloading XML")
                 }

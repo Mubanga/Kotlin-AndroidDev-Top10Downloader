@@ -48,8 +48,7 @@ class XmlDataReader(urlFeedPath: String,ReaderBufferSize: Int) {
         _Buffered_RSS_Reader.close() // *** N.B *** Always Remeber To Close The Connection ***
     }
 
-    // Setup The URL Connection
-    /**
+    /** Setup The URL Connection
      * Initialises A URL Connection And Reads The DATA With A BufferedReader
      *
      */
@@ -57,8 +56,9 @@ class XmlDataReader(urlFeedPath: String,ReaderBufferSize: Int) {
     {
         try{
             _RSS_URL = URL(_urlFeedPath)
-            val Active_Connection = _RSS_URL as HttpURLConnection
+            val Active_Connection = _RSS_URL.openConnection() as HttpURLConnection
             val Response_Code = Active_Connection.responseCode
+            Log.d(TAG,"$TAG: Server Response Code = ${Response_Code}")
             _Buffered_RSS_Reader = BufferedReader(InputStreamReader(Active_Connection.inputStream))
             ReadBufferedData() // TODO: There Is A Idiomatic Kotlin Expression To Read The Data ALL In One So If We Want To Do That We Can Implement That, However It's Not Advisable For Large DATA Sets
         }
@@ -75,7 +75,6 @@ class XmlDataReader(urlFeedPath: String,ReaderBufferSize: Int) {
             Log.e(TAG,"$TAG: Unknown Exception ${e.message}")
         }
     }
-
 
     /**
      * Downloads And Returns The Read XML Data
