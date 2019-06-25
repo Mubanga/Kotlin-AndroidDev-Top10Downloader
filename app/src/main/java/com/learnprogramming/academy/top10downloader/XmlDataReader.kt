@@ -60,20 +60,42 @@ class XmlDataReader(urlFeedPath: String,ReaderBufferSize: Int) {
             val Response_Code = Active_Connection.responseCode
             Log.d(TAG,"$TAG: Server Response Code = ${Response_Code}")
             _Buffered_RSS_Reader = BufferedReader(InputStreamReader(Active_Connection.inputStream))
+      //      Active_Connection.inputStream.buffered().reader().use { _XMLFeedData.append(it.readText())}
+      //      Active_Connection.inputStream.buffered(_ReaderBufferSize).reader().use { _XMLFeedData.append(it.readText()) }
             ReadBufferedData() // TODO: There Is A Idiomatic Kotlin Expression To Read The Data ALL In One So If We Want To Do That We Can Implement That, However It's Not Advisable For Large DATA Sets
         }
-        catch (e: MalformedURLException)
+        catch(e: Exception)
         {
-            Log.e(TAG,"$TAG: Invalid URL ${e.message} ")
-        }catch(e: IOException){
-            Log.e(TAG,"$TAG: IOException ${e.message} ")
+            var ErrorMessage:String
+            when(e)
+            {
+                is MalformedURLException -> {ErrorMessage = "$TAG: Invalid URL ${e.message}"
+                    Log.e(TAG,ErrorMessage)
+                }
+                is IOException -> { ErrorMessage = "$TAG: IOException ${e.message}"
+                    Log.e(TAG,ErrorMessage)
+                }
+                is SecurityException -> { ErrorMessage ="$TAG: Missing Permissions ? INTERNET ${e.message}"
+                    Log.e(TAG,ErrorMessage)
+                }
+                is Exception -> { ErrorMessage ="$TAG: Unknown Exception ${e.message}"
+                    Log.e(TAG,ErrorMessage)
+                }
 
-        } catch(e: SecurityException){
-            Log.e(TAG,"$TAG: Missing Permissions ? INTERNET ${e.message}")
+            }
         }
-        catch(e: Exception){
-            Log.e(TAG,"$TAG: Unknown Exception ${e.message}")
-        }
+//        catch (e: MalformedURLException)
+//        {
+//            Log.e(TAG,"$TAG: Invalid URL ${e.message} ")
+//        }catch(e: IOException){
+//            Log.e(TAG,"$TAG: IOException ${e.message} ")
+//
+//        } catch(e: SecurityException){
+//            Log.e(TAG,"$TAG: Missing Permissions ? INTERNET ${e.message}")
+//        }
+//        catch(e: Exception){
+//            Log.e(TAG,"$TAG: Unknown Exception ${e.message}")
+//        }
     }
 
     /**

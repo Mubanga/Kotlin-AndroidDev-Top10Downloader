@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.learnprogramming.academy.top10downloader">
 
-    <!--<uses-permission android:name="android.permission.INTERNET"/>-->
     <uses-permission-sdk-23 android:name="android.permission.INTERNET"/>
+    <uses-permission-sdk-23 android:name="android.permission.LOCATION_HARDWARE"/>
 
     <application
             android:allowBackup="true"
